@@ -1,5 +1,6 @@
 
-let savedTasks = [];
+var savedTasks = [];
+var tempArray = [];
 
 $("#currentDay").html(moment().format("dddd, MMMM Do YYYY"));
 
@@ -20,9 +21,7 @@ let colorBG = function(){
     });
 }
 
-
 $(".row").on("click", "div", function() {
-    console.log($(this).attr("id"));
 
     var textId = $(this).attr("id");
     var text = $(this)
@@ -38,34 +37,37 @@ $(".row").on("click", "div", function() {
     textInput.trigger("focus");
 
     colorBG();
+
 });
   
 
 $(".save").on("click", function() {
-
+    
     var textId = $(this).siblings(".tasks").attr("id");
-    var text = $(this).siblings(".tasks")
-    .val()
-    .trim();
-    console.log(text);
+    var tagId = $(this).siblings(".tasks").prop("tagName");
 
-    var taskP = $("<div>")
-    .attr("id",textId)
-    .addClass("tasks col-10 border")
-    .text(text);
+    if (tagId === "TEXTAREA") {
 
-    $(this).siblings(".tasks").replaceWith(taskP);
-  
-    saveTasks(textId);
-    colorBG();
+        var text = $(this).siblings(".tasks")
+        .val()
+        .trim();
+
+        var taskP = $("<div>")
+        .attr("id",textId)
+        .addClass("tasks col-10 border")
+        .text(text);
+
+        $(this).siblings(".tasks").replaceWith(taskP);
+
+        saveTasks(textId);
+        colorBG();
+    }
+
 });
 
 let loadTasks = function(){
 
-    savedTasks = JSON.parse(localStorage.getItem("tasks"));
-    if (!savedTasks) {
-        savedTasks = [];
-        };
+    loadArray();
  
     $.each(savedTasks, function(index, value) {
 
@@ -74,21 +76,41 @@ let loadTasks = function(){
 
 }
 
+let loadArray = function(){
+    savedTasks = JSON.parse(localStorage.getItem("tasks"));
+
+    if (!savedTasks) {
+        savedTasks = [];
+
+        $('.tasks').each(function() {
+            tempId = "#"+$(this).attr("id");
+            tempArray = [tempId,""];
+            savedTasks.push(tempArray);  
+        });
+
+        localStorage.setItem("tasks", JSON.stringify(savedTasks));
+    };
+}
+
 let saveTasks = function(taskId) {
 
     taskId = "#"+taskId;
-  
+    var indexVal = -1;
     tempArray = [taskId,$(taskId).text()];
     $.each(savedTasks, function(index, value){
-
         if (value[0] === taskId) {
-            console.log(value);
-            savedTasks.splice(index);
-        }
+           indexVal = index;    
+        } 
     });
-    
+
+    if (indexVal > -1){
+        savedTasks.splice(indexVal,1);
+    }
+
     savedTasks.push(tempArray);
+
     localStorage.setItem("tasks", JSON.stringify(savedTasks));
+ 
 
 }
 
