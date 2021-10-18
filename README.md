@@ -34,6 +34,13 @@ The following animation demonstrates the application functionality:
 
 ![day planner demo](./assets/images/05-third-party-apis-homework-demo.gif)
 
+![Final Image](./assets/images/day_scheduler.PNG)
+
+Working URL - https://lholgate.github.io/day-scheduler/
+
+
+GitHub URL - https://github.com/lholgate/day-scheduler
+
 ## Review
 
 You are required to submit the following for review:
